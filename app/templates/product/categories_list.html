@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> {{title}} </title>
+</head>
+<body>
+        <h1> {{title}}  </h1>
+        <h2> {{message}} </h2>
+        {% if display %}
+            {% if categories %}
+                <ul>
+                {% for i in categories %}
+                   <li> <a href="/product/category/{{i.id}}"> {{i.name}} </a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <h1> Пусто </h1>
+            {% endif %}
+            <a href="/product/category/create"> Добавить</a>
+        {% else %}
+            <a href="/user/login"> Вход</a>
+        {% endif %}
+            <p><a href="/main"> На главную</a></p>
+</body>
+</html>

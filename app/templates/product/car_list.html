@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <p> {{ message }} </p>
+    <h2>Пользователь: {{user.name}}</h2>
+                        <ul>
+                            <p> Название   Количество   Цена  Стоимость</p>
+                        {% for item in car %}
+                            <li> {{item[1]}}  {{item[2]}}  {{item[3]}}  {{item[2]*item[3]}}  </li>
+                        {% endfor %}
+                        </ul>
+
+        <p></p>
+        <p></p>
+        <a href="\main"> На главную</a>
+
+</body>
+</html>

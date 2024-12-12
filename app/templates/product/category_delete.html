@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> {{title}} </title>
+</head>
+<body>
+        <h1> Удаление категории: {{name}}  </h1>
+        <p> {{ message }} </p>
+        <p></p>
+        {% if display %}
+            {% if delete %}
+            <section class="conteiner-fluid">
+                <form method="post" action="/product/category/delete/{{id_category}}">
+                    <div class="col-auto">
+                        <div class="imput-group">
+                        <p></p>
+                        <button type="submit" id="btn-delete">Подтвердить</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+            {% else %}
+            <ul>
+                {% for i in children %}
+                    <li>{{i.name}}</li>
+                {% endfor %}
+            </ul>
+            <a href="/product/category/list">Перейти к списку категорий</a>
+           {% endif %}
+       {% endif %}
+</body>
+</html>

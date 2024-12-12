@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        <p> {{ message }} </p>
+        <p></p>
+        {% if display %}
+        <section class="conteiner-fluid">
+            <form method="post" action="/product/shop/update/{{shop.id}}">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <label for="name"> Введите название магазина </label>
+                    <input type="text" id="name"  name="name" value={{shop.name}} maxlength="255"
+                           aria-describedby="btn-update_shop">
+                    <p></p>
+                    <label for="location"> Введите адрес магазина </label>
+                    <input type="text" id="location"  name="location" value={{shop.location}} maxlength="255"
+                           aria-describedby="btn-update_shop">
+                    <p></p>
+                    <button type="submit" id="btn-update_shop" >Применить</button>
+                    </div>
+                </div>
+            </form>
+            <p></p>
+        </section>
+        {% endif %}
+        <p></p>
+        <p></p>
+    <a href="\main"> На главную</a>
+</body>
+</html>

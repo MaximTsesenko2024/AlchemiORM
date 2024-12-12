@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<title> {{title}}</title>
+</head>
+<body>
+    <header>
+            <h1>{{title}}</h1>
+    </header>
+        <h2>{{message}}</h2>
+       <section class="conteiner-fluid">
+            <form method="post" action="/user/login">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <label for="username"> Введите имя </label>
+                    <input type="text" id="username"  name="username" maxlength="255"
+                    aria-describedby="btn-enter">
+                     <label for="password"> Введите пароль </label>
+                    <input type="password" id="password" name="password" maxlength="255"
+                    aria-describedby="btn-enter">
+                    <p></p>
+                    <button type="submit" id="btn-enter">Войти</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    <a href="/user/repair"><button> Востановить пароль</button></a>
+    <p></p>
+    <a href="/user/registration"><button> Регистрация </button></a>
+    <p></p>
+    <fost>
+                <a href = '/main'><button>На главную</button></a>
+    </fost>
+</body>
+</html>

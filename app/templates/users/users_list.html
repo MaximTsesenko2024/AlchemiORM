@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <br>
+    <lu>
+        {% for user in users %}
+            <li> Имя пользователя {{user.username}} <a href="/user/list/{{user.id}}"> <button> Выбрать</button></a> </li>
+        {% endfor %}
+    </lu>
+
+
+
+</body>
+</html>

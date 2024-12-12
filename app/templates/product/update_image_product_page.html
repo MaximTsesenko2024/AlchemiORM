@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="./app/templates/product/style.css">
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        {% if display %}
+        <section class="conteiner-fluid">
+            <form method="post" action="/product/update_image_product/{{product.id}}" enctype="multipart/form-data">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <img src="data:image/{{format_file}}; base64, {{ image_str | safe }}" alt="{{ product.name}}"/>
+                        <h2> {{ product.name}} </h2>
+                         <label for="file"> Изменить изображение </label>
+                        <input type="file" id="file" name="file">
+                        <p></p>
+                    <button type="submit">Изменить</button>
+
+                    </div>
+                </div>
+            </form>
+            <p></p>
+        </section>
+        {% endif %}
+<a href="/product/list"> Вернуться</a>
+</body>
+</html>

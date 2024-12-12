@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        <p> {{ message }} </p>
+        <p></p>
+        <section class="conteiner-fluid">
+            <form method="post" action="/user/registration">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <label for="username"> Введите имя </label>
+                    <input type="text" id="username"  name="username" maxlength="255"
+                    aria-describedby="btn-registration">
+                    <p></p>
+                   <label for="email"> Введите адрес электронной почты </label>
+                    <input type="text" id="email" name="email"
+                    aria-describedby="btn-registration">
+                    <p></p>
+                     <label for="day_birth"> Введите дату рождения </label>
+                    <input type="date" id="day_birth" name="day_birth" maxlength="10"
+                    aria-describedby="btn-registration">
+                    <p></p>
+                     <label for="password"> Введите пароль </label>
+                    <input type="password" id="password" name="password" maxlength="255"
+                    aria-describedby="btn-registration">
+                    <p></p>
+                    <label for="repeat_password"> Повторите пароль </label>
+                    <input type="password" id="repeat_password" name="repeat_password" maxlength="255"
+                           aria-describedby="btn-registration">
+                    <p></p>
+                    <button type="submit" id="btn-registration">Зарегистрироваться</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <p></p>
+        <p></p>
+        <a href="\user\login"> Вход</a>
+        <p></p>
+        <a href="\main"> На главную</a>
+
+</body>
+</html>

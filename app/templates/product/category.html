@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> {{title}} </title>
+</head>
+<body>
+        <h1> {{title}}  </h1>
+        <h2> Название: {{category.name}} </h2>
+        {% if parent %}
+            <p> Родительская категория: {{parent.name}}</p>
+        {% else %}
+            <p>Родительская категория: отсутствует</p>
+        {% endif %}
+        <p>Связанные категории:</p>
+        {% if children %}
+            <ul>
+            {% for i in children %}
+               <li> <a href="/product/category/{{i.id}}"> {{i.name}} </a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>отсутствуют</p>
+        {% endif %}
+        <a href="/product/category/create"> Добавить</a>
+        <p><a href="/product/category/update/{{category.id}}"> Изменить</a></p>
+        <p><a href="/product/category/delete/{{category.id}}"> Удалить</a></p>
+        <p><a href="/product/category/list"> Вернуться к списку</a> </p>
+</body>
+</html>

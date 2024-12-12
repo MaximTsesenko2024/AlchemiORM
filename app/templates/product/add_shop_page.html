@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        <p> {{ message }} </p>
+        <p></p>
+        {% if display %}
+        <section class="conteiner-fluid">
+            <form method="post" action="/product/shop/create" enctype="multipart/form-data">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <label for="name"> Введите название магазина </label>
+                    <input type="text" id="name"  name="name" maxlength="255" aria-describedby="btn-add_shop">
+                    <p></p>
+                    <label for="location"> Введите адрес магазина </label>
+                    <input type="text" id="location"  name="location" maxlength="255"
+                           aria-describedby="btn-add_shop">
+                    <p></p>
+                    <button type="submit" id="btn-add_shop" >Добавить</button>
+                    </div>
+                </div>
+            </form>
+            <p></p>
+        </section>
+        {% endif %}
+        <p></p>
+        <p></p>
+    <a href="\main"> На главную</a>
+</body>
+</html>

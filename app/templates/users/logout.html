@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<title> {{title}}</title>
+</head>
+<body>
+    <header>
+            <h1>{{title}}</h1>
+    </header>
+        {{message}}
+        {% if login %}
+           <section class="conteiner-fluid">
+            <form method="post" action="/user/logout">
+                <div class="col-auto">
+                    <div class="imput-group">
+                        <p>Вы действительно хотите выйти</p>
+                        <p></p>
+                    <button type="submit" id="btn-exit">Да</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        {% else %}
+            <p> Не было входа </p>
+        {% endif %}
+    <p></p>
+    <a href="/user/login"><button> Вход</button></a>
+    <p></p>
+    <a href="/user/registration"><button> Регистрация </button></a>
+    <p></p>
+    <fost>
+        <a href = '/main'><button>На главную</button></a>
+    </fost>
+</body>
+</html>

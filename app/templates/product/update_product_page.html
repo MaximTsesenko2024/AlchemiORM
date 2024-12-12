@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="./app/templates/product/style.css">
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        {% if display %}
+        <section class="conteiner-fluid">
+            <form method="post" action="/product/update_product/{{product.id}}" enctype="multipart/form-data">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <img src="data:image/{{format_file}}; base64, {{ image_str | safe }}" alt="{{ product.name}}"/>
+                        <h2> {{ product.name}} </h2>
+                    <label for="item_number"> Введите артикул </label>
+                    <input type="text" id="item_number"  name="item_number" maxlength="255" value={{product.item_number}}
+                           aria-describedby="btn-add_product">
+                    <p></p>
+                   <label for="description"> Введите описание товара</label>
+                    <textarea id="description" name="description"> {{product.description}} </textarea>
+                    <p></p>
+                     <label for="price"> Введите цену товара </label>
+                    <input type="text" value={{product.price}} id="price" name="price" maxlength="255">
+                    <p></p>
+                     <label for="count"> Введите количество товара </label>
+                    <input type="text" value={{product.count}} id="count" name="count" maxlength="255">
+                    <p></p>
+                    <label for="category">Категория товара:</label>
+                    <select name="category" id="category">
+                        {% for item in categories %}
+                            <option value={{item.id}}> {{item.name}} </option>
+                        {% endfor %}
+                    </select>
+                    <p></p>
+                    <button type="submit">Изменить</button>
+
+                    </div>
+                </div>
+            </form>
+            <p></p>
+        </section>
+        {% endif %}
+<a href="/product/list"> Вернуться</a>
+</body>
+</html>

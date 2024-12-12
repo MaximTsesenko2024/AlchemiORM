@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/app/templates/product/style.css">
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        {% if display %}
+        <section class="conteiner-fluid">
+            <form method="post" action="/product/delete_product/{{product.id}}" enctype="multipart/form-data">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <h1> {{ product.name}}</h1>
+                    <img src="data:image/{{format_file}}; base64, {{ image_str | safe }}" alt="{{ product.name}}"/>
+                    <h2>Описание</h2>
+                    <p> {{product.description}}</p>
+                    <p>Цена {{product.price}}</p>
+                    <p> В наличии: {{product.price}} </p>
+                    <p>Категория: {{product_category}} </p>
+                    <p>Акция: {% if product.action %} Участвует {% else %} Нет {% endif %}</p>
+                    <button type="submit">Удалить</button>
+                    </div>
+                </div>
+            </form>
+            <p></p>
+        </section>
+        {% endif %}
+<a href="/product/list"> Вернуться</a>
+</body>
+</html>

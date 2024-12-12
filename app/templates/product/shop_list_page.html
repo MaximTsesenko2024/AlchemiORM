@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        <p> {{ message }} </p>
+        <p></p>
+        <ul>
+        {% for shop in shops %}
+            <li><a href="/product/shop/{{shop.id}}"> Название: {{shop.name}} адрес: {{shop.location}} </a> </li>
+        {% endfor %}
+        </ul>
+        {% if display %}
+            <p><a href="/product/shop/create"> Добавить магазин </a> </p>
+        {% endif %}
+        <p></p>
+    <a href="\main"> На главную</a>
+</body>
+</html>

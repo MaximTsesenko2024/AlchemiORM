@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <p> {{ message }} </p>
+            <section class="conteiner-fluid">
+            <form method="post" action="/product/buy/{{user.id}}">
+                <div class="col-auto">
+                    <div class="imput-group">
+                        <ul>
+                            <p> Название   Количество   Цена  Стоимость</p>
+                        {% for item in car %}
+                            <li> {{item[1]}}  {{item[2]}}  {{item[3]}}  {{item[2]*item[3]}} <a href="?delet={{item[0]}}"> Удалить из карзины</a> </li>
+                        {% endfor %}
+                        </ul>
+                        <label for="shop">Выберите магазин:</label>
+                        <select name="shop" id="shop">
+                        {% for item in shops %}
+                            <option value={{item.id}}> {{item.name}} / {{item.location}} </option>
+                        {% endfor %}
+                        </select>
+                        <h2>Всего к оплате: {{cost}}</h2>
+                    <button type="submit" id="btn-buy">Оплатить</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <p><a href="\product\list"> Продолжить покупки </a></p>
+        <p></p>
+        <p></p>
+        <a href="\main"> На главную</a>
+
+</body>
+</html>

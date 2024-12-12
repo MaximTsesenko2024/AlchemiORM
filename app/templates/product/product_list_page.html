@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> {{title}} </title>
+</head>
+<body>
+        <h1> {{title}}  </h1>
+        <form method="get" action="/product/list">
+            <input type="search" id="mySearch" name="q" placeholder="Поиск товаров" size="30" />
+        </form>
+        {% if service %}
+        <p> Страницы:
+            {% for i in service['pages'] %}
+                <a href="?page={{i}}">{{i}}</a>
+            {% endfor %}
+            </p>
+        {% endif %}
+        {% if products %}
+            <ul>
+            {% for i in products %}
+              <li><img src="data:image/{{i['format_file']}}; base64, {{ i['image_str'] | safe }}" alt="{{ i['name']}}"/>
+                  <a href="/product/{{i['id']}}"> {{ i['name']}} </a> Цена: {{i['price']}} рублей</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <h1> Нет доступных товаров </h1>
+        {% endif %}
+        {% if is_staff %}
+            <a href="/product/create"> Добавить</a>
+        {% endif %}
+        <p><a href="/main"> На главную</a></p>
+</body>
+</html>

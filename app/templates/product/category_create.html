@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> {{title}} </title>
+</head>
+<body>
+        <h1> {{title}}  </h1>
+        <p> {{ message }} </p>
+        <p></p>
+        {% if display %}
+        <section class="conteiner-fluid">
+            <form method="get" action="/product/category/create">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <label for="name"> Введите название категории </label>
+                    <input type="text" id="name" name="name" required  aria-describedby="btn-add">
+                    <p>Выберите родительскую категорию: </p>
+                        <ul>
+                            <li>
+                              <label>
+                                <input type="radio" value="-1" name="parent" required> Нет
+                              </label>
+                            </li>
+                            {% if categories %}
+                            {% for i in categories %}
+                                <li>
+                                  <label>
+                                    <input type="radio" value={{i.id}} name="parent" required> {{i.name}}
+                                  </label>
+                                </li>
+                            {% endfor %}
+                            {% endif %}
+                        </ul>
+                    <p></p>
+                    <button type="submit" id="btn-add">Создать</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        {% else %}
+            <a href="/user/login"> Вход</a>
+        {% endif %}
+</body>
+</html>

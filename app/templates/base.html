@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<title> {% block name %} {{title}}{% endblock %}</title>
+</head>
+<body>
+    <header>
+        {% block pagename %}
+            <h1>{{title}}</h1>
+        {% endblock %}
+    </header>
+    <cont>
+        {% block content %}
+
+        {% endblock %}
+    </cont>
+    <fost>
+        {% block foster %}
+            {% if tk %}
+                <a href = '/main?tk={{tk}}'><button>На главную</button></a>
+            {% else %}
+                <a href = '/main'><button>На главную</button></a>
+        {% endblock %}
+    </fost>
+</body>
+</html>

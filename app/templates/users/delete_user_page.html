@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        <p> {{ message }} </p>
+        <p></p>
+        <form method="post" action="/user/list/delete/{{user.id}}">
+        <h2> Имя пользователя: {{user.username}}</h2>
+        <p> Адрес электронной почты: {{user.email}}</p>
+        <p> Дата рождения: {{user.day_birth}}</p>
+        <p></p>
+        <p>Используется: {% if user.is_active %} Да {% else %} Нет {% endif %}</p>
+        <p></p>
+        <p>Сотрудник: {% if user.is_staff %} Да {% else %} Нет {% endif %}</p>
+        <p></p>
+        <p>Администратор: {% if user.admin %} Да {% else %} Нет {% endif %}</p>
+        <p></p>
+         <p>Дата создания: {{user.created_at}}</p>
+        <p></p>
+        <p>Дата последнего обновления: {{user.updated_at}}</p>
+        <p></p>
+            <button type="submit">Удалить</button>
+        </form>
+    <p><a href="\main"> На главную</a></p>
+
+
+
+</body>
+</html>

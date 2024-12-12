@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        <p> {{ message }} </p>
+        <p></p>
+        <section class="conteiner-fluid">
+            <form method="post" action="/user/update/{{user.id}}?">
+                <div class="col-auto">
+                    <div class="imput-group">
+                    <p>Пользователь: {{user.username}}</p>
+                   <label for="email"> Введите адрес электронной почты </label>
+                    <input type="text" id="email" name="email" value={{user.email}}
+                    aria-describedby="btn-update">
+                    <p></p>
+                     <label for="day_birth"> Введите дату рождения: </label>
+                    <input type="date" id="day_birth" name="day_birth" value={{user.day_birth}}
+                    aria-describedby="btn-update">
+                    <p></p>
+                    <button type="submit" id="btn-update">Изменить</button>
+                     <p></p>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <p></p>
+        <a href="/user/create_password/{{user.id}}">Изменить пароль</a>
+        <p></p>
+        <a href="/main"> На главную</a>
+
+</body>
+</html>

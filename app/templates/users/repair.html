@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<title> {{title}}</title>
+</head>
+<body>
+    <header>
+            <h1>{{title}}</h1>
+    </header>
+        <h2>{{message}}</h2>
+       <section class="conteiner-fluid">
+            <form method="post" action="/user/repair">
+                <div class="col-auto">
+                    <div class="imput-group">
+                        <h2>Укажите данные введённые при регистрации</h2>
+                    <label for="username"> Введите имя </label>
+                    <input type="text" id="username"  name="username" maxlength="255"
+                    aria-describedby="btn-repair">
+                     <label for="email"> Введите email </label>
+                    <input type="text" id="email" name="email" maxlength="255"
+                    aria-describedby="btn-repair">
+                    <p></p>
+                    <button type="submit" id="btn-repair">Востановить</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    <p></p>
+    <a href="/user/registration"><button> Регистрация </button></a>
+    <p></p>
+    <fost>
+                <a href = '/main'><button>На главную</button></a>
+    </fost>
+</body>
+</html>
