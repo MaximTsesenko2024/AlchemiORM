@@ -293,7 +293,7 @@ async def select_user_admin_get(request: Request, db: Annotated[Session, Depends
     else:
         info['user'] = user
         info['is_staff'] = user.admin
-    return templates.TemplateResponse("users/user_page.html", info)
+    return templates.TemplateResponse("users/admin_user.html", info)
 
 
 @user_router.get('/list')

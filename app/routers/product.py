@@ -399,6 +399,7 @@ async def delete_product_post(request: Request, db: Annotated[Session, Depends(g
             os.remove("./app/templates/product/image/" + product.name)
             db.execute(delete(ProductModel).where(ProductModel.id == id_product))
             db.commit()
+            return RedirectResponse(f'/product/list', status_code=status.HTTP_303_SEE_OTHER)
         else:
             info['message'] = 'Товар уже покупали. Для удаления обратитесь к администратору'
             return templates.TemplateResponse('product/delete_product_page.html', info)
