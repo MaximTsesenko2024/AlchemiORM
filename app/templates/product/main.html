@@ -1,42 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-.dropbtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 60px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {background-color: #ddd;}
-
-.dropdown:hover .dropdown-content {display: block;}
-
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
-</style>
 <head>
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
     <meta charset="UTF-8">
 <title> {{title}}</title>
 </head>
@@ -55,7 +20,7 @@
                             <a href="/user">Меню пользователя</a>
                             <a href="/product/list">Список товаров</a>
                             <a href="/product/shop/list">Список магазинов</a>
-                            {% if user_id %} <a href="/product/buy/{{user_id}}">Корзина</a>{% endif %}
+                            {% if user_id %} <a href="/product/buy">Корзина</a>{% endif %}
                             {% if is_staff %} <a href="/product/category/list">Список категорий</a>{% endif %}
                     </div>
             </div>

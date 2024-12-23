@@ -11,7 +11,7 @@
                         <ul>
                             <p> Название   Количество   Цена  Стоимость</p>
                         {% for item in car %}
-                            <li> {{item[1]}}  {{item[2]}}  {{item[3]}}  {{item[2]*item[3]}}  </li>
+                            <li> {{item.name}}  {{item.count}}  {{item.price}}  {{item.count*item.price}}  </li>
                         {% endfor %}
                         </ul>
 

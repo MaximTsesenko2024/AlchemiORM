@@ -21,17 +21,17 @@
                     <input type="date" id="day_birth" name="day_birth" value={{user.day_birth}}
                     aria-describedby="btn-update">
                     <p></p>
-                    <label for="is_active">Используется: </label>
-                    <input type="checkbox" id="is_active" name="is_active" value={{user.is_active}}
-                    aria-describedby="btn-update">
+                    <label for="is_active">Активный: </label>
+                    <input type="text" id="is_active" name="is_active" {% if user.is_active %} value="Да" {% else %} value="Нет" {% endif %}
+                    aria-describedby="btn-update"> Да/Нет
                     <p></p>
                     <label for="is_staff">Сотрудник: </label>
-                    <input type="checkbox" id="is_staff" name="is_staff" value={{user.is_staff}}
-                    aria-describedby="btn-update">
+                    <input type="text" id="is_staff" name="is_staff" {% if user.is_staff %} value="Да" {% else %} value="Нет" {% endif %}
+                    aria-describedby="btn-update"> Да/Нет
                     <p></p>
                     <label for="admin">Администратор: </label>
-                    <input type="checkbox" id="admin" name="admin" value={{user.admin}}
-                    aria-describedby="btn-update">
+                    <input type="text" id="admin" name="admin" {% if user.admin %} value="Да" {% else %} value="Нет"  {% endif %}
+                    aria-describedby="btn-update"> Да/Нет
                     <button type="submit" id="btn-update">Изменить</button>
                      <p></p>
                     </div>

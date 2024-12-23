@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
     <meta charset="UTF-8">
     <title> {{title}} </title>
 </head>
@@ -8,8 +9,16 @@
         <h1> {{title}}  </h1>
         <form method="get" action="/product/list">
             <input type="search" id="mySearch" name="q" placeholder="Поиск товаров" size="30" />
-			            <button>Поиск</button>
+            <button>Поиск</button>
         </form>
+        <div class="dropdown">
+                    <button class="dropbtn">Категории</button>
+                    <div class="dropdown-content">
+                        {% for category in categories %}
+                            <a href="?category={{category.id}}">{{category.name}}</a>
+                        {% endfor %}
+                    </div>
+            </div>
         {% if service %}
         <p> Страницы:
             {% for i in service['pages'] %}

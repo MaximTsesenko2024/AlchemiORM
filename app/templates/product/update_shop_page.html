@@ -14,12 +14,10 @@
                 <div class="col-auto">
                     <div class="imput-group">
                     <label for="name"> Введите название магазина </label>
-                    <input type="text" id="name"  name="name" value={{shop.name}} maxlength="255"
-                           aria-describedby="btn-update_shop">
+                    <textarea id="name"  name="name"> {{shop.name}} </textarea>
                     <p></p>
                     <label for="location"> Введите адрес магазина </label>
-                    <input type="text" id="location"  name="location" value={{shop.location}} maxlength="255"
-                           aria-describedby="btn-update_shop">
+                        <textarea id="location"  name="location" > {{shop.location}} </textarea>
                     <p></p>
                     <button type="submit" id="btn-update_shop" >Применить</button>
                     </div>

@@ -23,15 +23,19 @@
             <p>Дата последнего обновления: {{user.updated_at}}</p>
             <p></p>
         {% endif %}
+        {% if user.admin %}
+            <p><a href="\user\list"><button>Список пользователей</button></a></p>
+        {% endif %}
         <a href="\user\update\{{user.id}}"><button>Изменить</button></a>
         <p></p>
         <a href="\user\delete"><button>Удалить</button></a>
         <p></p>
+        <p><a href="\user\logout"><button>Выход</button></a></p>
     {% else %}
         <p> Вы не авторизованы. Пройдите авторизацию </p>
+        <p><a href="\user\login"><button>Вход</button></a></p>
+        <p><a href="\user\registration"><button>Регистрация</button></a></p>
     {% endif %}
-    <p><a href="\user\login"><button>Вход</button></a></p>
-    <p><a href="\user\logout"><button>Выход</button></a></p>
     <p><a href="\main"> На главную</a></p>
 
 

@@ -12,19 +12,20 @@
                 <div class="col-auto">
                     <div class="imput-group">
                     <p>Описание: {{product.description}}</p>
-                     <p>Цена: {{product.cost}}</p>
+                     <p>Цена: {{product.price}}</p>
                     <p>Доступное количество: {{product.count}}</p>
-                    <p>Стоимость: {{price}}</p>
                     <label for="count"> Введите требуемое количество товара </label>
                     <input type="text" id="count" name="count" value="{{count}}" maxlength="255" aria-describedby="btn-buy">
                     <p></p>
+                    {% if buy %}
                     <button type="submit" id="btn-buy">Применить</button>
+                    {% endif %}
                     </div>
                 </div>
             </form>
         </section>
         <p><a href="\product\list"> Продолжить покупки </a></p>
-        <p><a href="\product\buy\{{user.id}}"> Перейти к оплате </a></p>
+        <p><a href="\product\buy"> Перейти к оплате </a></p>
         <p></p>
         <p></p>
         <a href="\main"> На главную</a>

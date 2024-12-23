@@ -1,0 +1,30 @@
+form {
+  width: 90vw;
+  max-width: 20em;
+  background: gray;
+}
+
+button {
+  margin-top: 2rem;
+}
+
+input {
+  border: 1px solid;
+  padding: 0.3em;
+  width: 100%;
+}
+
+label {
+  display: block;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+
+.date-code {
+  display: flex;
+  margin: 0 -1em;
+}
+
+.date-code div {
+  margin: 0 1em;
+}

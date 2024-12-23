@@ -7,14 +7,15 @@
 <body>
     <h1>{{title}}</h1>
     <p> {{ message }} </p>
+        {% if display %}
             <section class="conteiner-fluid">
-            <form method="post" action="/product/buy/{{user.id}}">
+            <form method="post" action="/product/buy">
                 <div class="col-auto">
                     <div class="imput-group">
                         <ul>
                             <p> Название   Количество   Цена  Стоимость</p>
                         {% for item in car %}
-                            <li> {{item[1]}}  {{item[2]}}  {{item[3]}}  {{item[2]*item[3]}} <a href="?delet={{item[0]}}"> Удалить из карзины</a> </li>
+                            <li> {{item.name}}  {{item.count}}  {{item.price}}  {{item.count*item.price}} <a href="?delet={{item.number}}"> Удалить из карзины</a> </li>
                         {% endfor %}
                         </ul>
                         <label for="shop">Выберите магазин:</label>
@@ -30,6 +31,7 @@
             </form>
         </section>
         <p><a href="\product\list"> Продолжить покупки </a></p>
+        {% endif %}
         <p></p>
         <p></p>
         <a href="\main"> На главную</a>

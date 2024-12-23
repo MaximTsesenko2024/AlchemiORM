@@ -71,10 +71,11 @@ class Car(BaseModel):
     count: int
 
 
-class Buyer(BaseModel):
-    user: int
-    product: int
-    shop: str
+class Payment(BaseModel):
+    name: str
+    card_number: int
+    expiry_date: str
+    security_code: int
 
 
 class Category(BaseModel):

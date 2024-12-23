@@ -7,24 +7,26 @@
 <body>
         <h1> {{title}}  </h1>
         <h2> Название: {{category.name}} </h2>
-        {% if parent %}
-            <p> Родительская категория: {{parent.name}}</p>
-        {% else %}
-            <p>Родительская категория: отсутствует</p>
+        {% if display %}
+            {% if parent %}
+                <p> Родительская категория: {{parent.name}}</p>
+            {% else %}
+                <p>Родительская категория: отсутствует</p>
+            {% endif %}
+            <p>Связанные категории:</p>
+            {% if children %}
+                <ul>
+                {% for i in children %}
+                   <li> <a href="/product/category/{{i.id}}"> {{i.name}} </a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>отсутствуют</p>
+            {% endif %}
+            <a href="/product/category/create"> <button> Добавить </button> </a>
+            <p><a href="/product/category/update/{{category.id}}">  <button>  Изменить </button> </a></p>
+            <p><a href="/product/category/delete/{{category.id}}">  <button>  Удалить </button> </a></p>
+            <p><a href="/product/category/list">  <button>  Вернуться к списку </button> </a> </p>
         {% endif %}
-        <p>Связанные категории:</p>
-        {% if children %}
-            <ul>
-            {% for i in children %}
-               <li> <a href="/product/category/{{i.id}}"> {{i.name}} </a></li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>отсутствуют</p>
-        {% endif %}
-        <a href="/product/category/create"> Добавить</a>
-        <p><a href="/product/category/update/{{category.id}}"> Изменить</a></p>
-        <p><a href="/product/category/delete/{{category.id}}"> Удалить</a></p>
-        <p><a href="/product/category/list"> Вернуться к списку</a> </p>
 </body>
 </html>
