@@ -4,6 +4,9 @@ from sqlalchemy.orm import relationship
 
 
 class ProductModel(Base):
+    """
+    Модель, описывающая сущность товара
+    """
     __tablename__ = 'products'
     __table_args__ = {'keep_existing': True}
     id = Column(INTEGER, primary_key=True)
@@ -28,6 +31,9 @@ class ProductModel(Base):
 
 
 class BuyerProd(Base):
+    """
+    Модель, описывающая сущность покупки товара
+    """
     __tablename__ = 'buyer'
     __table_args__ = {'keep_existing': True}
     id = Column(INTEGER, primary_key=True)
@@ -38,6 +44,9 @@ class BuyerProd(Base):
 
 
 class Categories(Base):
+    """
+    Модель, описывающая сущность категории
+    """
     __tablename__ = 'categories'
     __table_args__ = {'keep_existing': True}
     id = Column(INTEGER, primary_key=True)
@@ -46,11 +55,15 @@ class Categories(Base):
 
 
 class Shops(Base):
+    """
+    Модель, описывающая сущность магазин
+    """
     __tablename__ = 'shops'
     __table_args__ = {'keep_existing': True}
     id = Column(INTEGER, primary_key=True)
     name = Column(String, unique=True)
     location = Column(String)
+    is_active = Column(BOOLEAN, default=True)
 
 
 user = relationship('User', back_populates='id')

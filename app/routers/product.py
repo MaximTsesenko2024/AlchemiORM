@@ -15,8 +15,9 @@ import base64
 import os
 from PIL import Image
 
+
 class CarView:
-    def __init__(self, number,  id_prod, name, price, count):
+    def __init__(self, number, id_prod, name, price, count):
         self.number = number
         self.id_prod = id_prod
         self.name = name
@@ -363,6 +364,7 @@ async def select_products_list_get(request: Request, db: Annotated[Session, Depe
             product_list.append({'name': product.name, 'price': product.price, 'id': product.id, 'image_str': image_str,
                                  'format_file': format_file})
         info['products'], service = pagination(product_list, page, 4)
+        info['categories'] = db.scalars(select(Categories).where(Categories.parent == -1)).all()
         print(service)
         pages = [x for x in range(service['total'] + 1)]
         info['service'] = {'page': service['page'], 'size': service['size'], 'pages': pages}
@@ -659,7 +661,7 @@ async def buy_get(request: Request, db: Annotated[Session, Depends(get_db)], del
         car = cars[user.id]
         info['car'] = car
         info['user'] = user
-        info['shops'] = db.scalars(select(Shops)).all()
+        info['shops'] = db.scalars(select(Shops).where(Shops.is_active)).all()
         for item in car:
             cost += item.price * item.count
         info['cost'] = cost
@@ -969,13 +971,13 @@ async def delete_shop_post(request: Request, db: Annotated[Session, Depends(get_
         return RedirectResponse('/main')
     else:
         info['display'] = 'Ok'
-        db.execute(delete(Shops).where(Shops.id == shop_id))
+        db.execute(update(Shops).where(Shops.id == shop_id).values(is_active=False))
         db.commit()
         return RedirectResponse('/product/shop/list', status_code=status.HTTP_303_SEE_OTHER)
 
 
 @product_router.get('/shop/list')
-async def select_shop_get(request: Request, db: Annotated[Session, Depends(get_db)],
+async def select_shop_list_get(request: Request, db: Annotated[Session, Depends(get_db)],
                           user=Depends(get_current_user)):
     """
     Отображение страницы со списком магазинов.
@@ -985,7 +987,7 @@ async def select_shop_get(request: Request, db: Annotated[Session, Depends(get_d
     :return: Страница со списком магазинов.
     """
     info = {'request': request, 'title': 'Список магазинов'}
-    shops = db.scalars(select(Shops)).all()
+    shops = db.scalars(select(Shops).where(Shops.is_active)).all()
     if user is None:
         pass
     elif user.is_staff:

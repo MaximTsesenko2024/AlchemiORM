@@ -10,7 +10,6 @@
         <form method="get" action="/product/list">
             <input type="search" id="mySearch" name="q" placeholder="Поиск товаров" size="30" />
             <button>Поиск</button>
-        </form>
         <div class="dropdown">
                     <button class="dropbtn">Категории</button>
                     <div class="dropdown-content">
@@ -19,6 +18,7 @@
                         {% endfor %}
                     </div>
             </div>
+            </form>
         {% if service %}
         <p> Страницы:
             {% for i in service['pages'] %}
