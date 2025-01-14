@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./app/templates/product/style.css">
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{{title}}</title>
 </head>
@@ -12,7 +12,7 @@
             <form method="post" action="/product/update_image_product/{{product.id}}" enctype="multipart/form-data">
                 <div class="col-auto">
                     <div class="imput-group">
-                    <img src="data:image/{{format_file}}; base64, {{ image_str | safe }}" alt="{{ product.name}}"/>
+                    <img style="float: left" src="data:image/{{format_file}}; base64, {{ image_str | safe }}" alt="{{ product.name}}"/>
                         <h2> {{ product.name}} </h2>
                          <label for="file"> Изменить изображение </label>
                         <input type="file" id="file" name="file">

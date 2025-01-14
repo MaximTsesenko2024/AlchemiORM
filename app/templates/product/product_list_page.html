@@ -10,7 +10,7 @@
         <form method="get" action="/product/list">
             <input type="search" id="mySearch" name="q" placeholder="Поиск товаров" size="30" />
             <button>Поиск</button>
-        <div class="dropdown">
+            <div class="dropdown">
                     <button class="dropbtn">Категории</button>
                     <div class="dropdown-content">
                         {% for category in categories %}
@@ -18,19 +18,30 @@
                         {% endfor %}
                     </div>
             </div>
-            </form>
+        </form>
         {% if service %}
         <p> Страницы:
             {% for i in service['pages'] %}
-                <a href="?page={{i}}">{{i}}</a>
+                <a href="?page={{i}}">{{i+1}}</a>
             {% endfor %}
             </p>
         {% endif %}
         {% if products %}
             <ul>
             {% for i in products %}
-              <li><img src="data:image/{{i['format_file']}}; base64, {{ i['image_str'] | safe }}" alt="{{ i['name']}}"/>
-                  <a href="/product/{{i['id']}}"> {{ i['name']}} </a> Цена: {{i['price']}} рублей</li>
+              <li>
+                  <p>
+                  <div>
+                      <img src="data:image/{{i['format_file']}}; base64, {{ i['image_str'] | safe }}" alt="{{ i['name']}}"/>
+                      <a href="/product/{{i['id']}}"> {{ i['name']}} </a> <br>
+                      {% if not i['is_active'] %}  Товар не доступен <br> <br>
+                      {% else %}
+                      {% if i['count'] %} Товар в наличии {% else %} Товар отсутствует {% endif %} <br>
+                      Цена: {{i['price']}} рублей <br>
+                      {% endif %} <br>
+                  </div>
+                  </p>
+              </li>
             {% endfor %}
             </ul>
         {% else %}
@@ -39,6 +50,8 @@
         {% if is_staff %}
             <a href="/product/create"> Добавить</a>
         {% endif %}
+        <p></p>
+        <p></p>
         <p><a href="/main"> На главную</a></p>
 </body>
 </html>

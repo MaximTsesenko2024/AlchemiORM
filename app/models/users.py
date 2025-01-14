@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 class User(Base):
     __tablename__ = 'users'
     __table_args__ = {'keep_existing': True}
-    id = Column(INTEGER, primary_key=True)
+    id = Column(INTEGER, primary_key=True, index=True)
     # имя пользователя в системе
     username = Column(String, index=True, unique=True)
     # адрес электронной почты
@@ -24,8 +24,11 @@ class User(Base):
     created_at = Column(DATETIME)
     # Временная метка показывающая время последнего обновления объекта.
     updated_at = Column(DATETIME)
-
-
-id = relationship('BuyerProd', back_populates='user')
+    purchase = relationship(
+        'BuyerProd',
+        back_populates='user',
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
 
 

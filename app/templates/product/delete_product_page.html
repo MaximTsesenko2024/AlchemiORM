@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="/app/templates/product/style.css">
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{{title}}</title>
 </head>
@@ -9,7 +9,7 @@
     <h1>{{title}}</h1>
         {% if display %}
         <section class="conteiner-fluid">
-            <form method="post" action="/product/delete_product/{{product.id}}" enctype="multipart/form-data">
+            <form method="post" action="/product/delete/{{product.id}}" enctype="multipart/form-data">
                 <div class="col-auto">
                     <div class="imput-group">
                     <h1> {{ product.name}}</h1>

@@ -2,13 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
     <title>{{title}}</title>
-        <style>
-        img {
-            float: left;
-            margin: 10px;
-        }
-    </style>
 </head>
 <body>
         <h1> {{ product.name}}</h1>
@@ -21,7 +16,7 @@
             <p>Категория: {{product_category}} </p>
             <p>Акция: {% if product.action %} Участвует {% else %} Нет {% endif %}</p>
             {% if user %}
-            <a href="/product/car/{{product.id}}"> Купить</a>
+            <a href="/buy/car/{{product.id}}"> Купить</a>
             {% else %}
             <p>Вы не вошли в систему</p>
             {% endif %}

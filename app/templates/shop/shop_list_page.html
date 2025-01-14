@@ -10,11 +10,11 @@
         <p></p>
         <ul>
         {% for shop in shops %}
-            <li><a href="/product/shop/{{shop.id}}"> Название: {{shop.name}} адрес: {{shop.location}} </a> </li>
+            <li><a href="/shop/{{shop.id}}"> Название: {{shop.name}} адрес: {{shop.location}} </a> </li>
         {% endfor %}
         </ul>
         {% if display %}
-            <p><a href="/product/shop/create"> Добавить магазин </a> </p>
+            <p><a href="/shop/create"> Добавить магазин </a> </p>
         {% endif %}
         <p></p>
     <a href="\main"> На главную</a>

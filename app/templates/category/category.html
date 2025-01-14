@@ -17,16 +17,16 @@
             {% if children %}
                 <ul>
                 {% for i in children %}
-                   <li> <a href="/product/category/{{i.id}}"> {{i.name}} </a></li>
+                   <li> <a href="/category/{{i.id}}"> {{i.name}} </a></li>
                 {% endfor %}
                 </ul>
             {% else %}
                 <p>отсутствуют</p>
             {% endif %}
-            <a href="/product/category/create"> <button> Добавить </button> </a>
-            <p><a href="/product/category/update/{{category.id}}">  <button>  Изменить </button> </a></p>
-            <p><a href="/product/category/delete/{{category.id}}">  <button>  Удалить </button> </a></p>
-            <p><a href="/product/category/list">  <button>  Вернуться к списку </button> </a> </p>
+            <a href="/category/create"> <button> Добавить </button> </a>
+            <p><a href="/category/update/{{category.id}}">  <button>  Изменить </button> </a></p>
+            <p><a href="/category/delete/{{category.id}}">  <button>  Удалить </button> </a></p>
+            <p><a href="/category/list">  <button>  Вернуться к списку </button> </a> </p>
         {% endif %}
 </body>
 </html>

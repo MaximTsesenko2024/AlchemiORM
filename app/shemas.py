@@ -7,18 +7,17 @@ from fastapi_filter.base.filter import BaseFilterModel
 
 
 class AdminUser(BaseModel):
-    # имя пользователя в системе
-    username: str
     # адрес электронной почты
     email: str
     # дата рождения
     day_birth: date
     # Флаг активности пользователя
-    is_active: bool
+    is_active: str
     # Флаг принадлежности к сотрудникам
-    is_staff: bool
+    is_staff: str
     # Флаг принадлежности к администраторам
-    admin: bool
+    admin: str
+
 
 class CreateUser(BaseModel):
     username: str
@@ -54,17 +53,7 @@ class Product(BaseModel):
     price: int
     count: int
     item_number: str
-
     img: str
-
-
-class Product(BaseModel):
-    name: str
-    description: str
-    price: float
-    count: int
-    item_number: str
-    category: int
 
 
 class Car(BaseModel):

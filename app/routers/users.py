@@ -1,21 +1,19 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Body, Request, Form, Response, Cookie, Header
-from fastapi import params
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi import APIRouter, Depends, status, HTTPException, Request, Form
+from fastapi.responses import RedirectResponse
 from sqlalchemy import insert, select, update, delete
 from sqlalchemy.orm import Session
 from typing import Annotated
 from app.models.users import User
-from app.models.product import BuyerProd
 from app.backend.db.db_depends import get_db
 from fastapi.templating import Jinja2Templates
 from app.shemas import CreateUser, SelectUser, UpdateUser, AdminUser, RepairPassword, CreatePassword
-from datetime import datetime, date
+from datetime import datetime
 from .auth import get_password_hash, create_access_token, verify_password
-from .dependencies import get_current_user, find_user_by_id
-from .product import cars
+from ..depends import get_current_user, find_user_by_id, delete_buyer
+from .buy import cars
 
 user_router = APIRouter(prefix='/user', tags=['user'])
-templates = Jinja2Templates(directory='app/templates/')
+templates = Jinja2Templates(directory='app/templates/users')
 
 
 def check_user(db: Annotated[Session, Depends(get_db)], name: str, password: str):
@@ -88,7 +86,7 @@ async def add_user_post(request: Request, db: Annotated[Session, Depends(get_db)
         info['message'] = f'Пользователь c email: {email} уже существует!'
     else:
         password = get_password_hash(password)
-        result = db.execute(
+        db.execute(
             insert(User).values(username=username, day_birth=day_birth, email=email, password=password,
                                 created_at=datetime.now(), updated_at=datetime.now()))
 
@@ -99,7 +97,7 @@ async def add_user_post(request: Request, db: Annotated[Session, Depends(get_db)
         response = RedirectResponse(f'/user', status_code=status.HTTP_303_SEE_OTHER)
         response.set_cookie(key="users_access_token", value=access_token, httponly=True)
         return response
-    return templates.TemplateResponse("users/registration.html", info)
+    return templates.TemplateResponse("registration.html", info)
 
 
 @user_router.get('/registration')
@@ -110,7 +108,7 @@ async def add_user_get(request: Request):
     :return: Страница с полями для ввода регистрационных данных
     """
     info = {'request': request, 'title': 'Регистрация'}
-    return templates.TemplateResponse("users/registration.html", info)
+    return templates.TemplateResponse("registration.html", info)
 
 
 @user_router.get('/login')
@@ -122,7 +120,7 @@ async def enter_user_get(request: Request):
     """
     info = {'request': request, 'title': 'Вход'}
 
-    return templates.TemplateResponse("users/login.html", info)
+    return templates.TemplateResponse("login.html", info)
 
 
 @user_router.post('/login')
@@ -139,17 +137,13 @@ async def enter_user_post(request: Request, db: Annotated[Session, Depends(get_d
     info = {'request': request, 'title': 'Вход'}
     username = select_user.username
     password = select_user.password
-
     info['message'], stat, user = check_user(db, username, password)
-    print(info['message'], stat)
     if stat == 'Ok':
         access_token = create_access_token({"sub": str(user.id)})
-        print(access_token)
         response = RedirectResponse(f'/user', status_code=status.HTTP_303_SEE_OTHER)
         response.set_cookie(key="users_access_token", value=access_token, httponly=True)
-        print('set token')
     else:
-        response = templates.TemplateResponse("users/login.html", info)
+        response = templates.TemplateResponse("login.html", info)
     return response
 
 
@@ -165,7 +159,9 @@ async def exit_user_get(request: Request,
     info = {'request': request, 'title': 'Выход'}
     if user is not None:
         info['login'] = True
-    return templates.TemplateResponse('users/logout.html', info)
+    else:
+        info['login'] = False
+    return templates.TemplateResponse('logout.html', info)
 
 
 @user_router.post('/logout')
@@ -177,15 +173,14 @@ async def exit_user_post(request: Request,
     :param user: Текущий пользователь.
     :return: Переход на страницу данные пользователя
     """
-    info = {'request': request, 'title': 'Выход'}
+    info = {'request': request, 'title': 'Выход', 'login': False}
     if user is not None:
         info['message'] = f'Пользователь: {user.username} вышел из системы'
-        info['login'] = True
-        response = templates.TemplateResponse('users/logout.html', info)
+        response = templates.TemplateResponse('logout.html', info)
         response.delete_cookie(key="users_access_token")
     else:
         info['message'] = 'Вы не были авторизованы'
-        response = templates.TemplateResponse('users/logout.html', info)
+        response = templates.TemplateResponse('logout.html', info)
     return response
 
 
@@ -216,7 +211,7 @@ async def update_user_post(request: Request, db: Annotated[Session, Depends(get_
     db.commit()
     info['message'] = 'Обновлено'
     info['user'] = user
-    return templates.TemplateResponse("users/update_user.html", info)
+    return templates.TemplateResponse("update_user.html", info)
 
 
 @user_router.get('/update/{user_id}')
@@ -237,7 +232,7 @@ async def update_user_get(request: Request, db: Annotated[Session, Depends(get_d
         return HTTPException(status.HTTP_401_UNAUTHORIZED, detail='Нет доступа')
     else:
         info['user'] = user
-    return templates.TemplateResponse("users/update_user.html", info)
+    return templates.TemplateResponse("update_user.html", info)
 
 
 @user_router.get('/delete')
@@ -272,7 +267,7 @@ async def select_user_get(request: Request, user: Annotated[User, Depends(get_cu
     if user is not None:
         info['tk'] = True
         info['user'] = user
-    return templates.TemplateResponse("users/user_page.html", info)
+    return templates.TemplateResponse("user_page.html", info)
 
 
 @user_router.get('/repair')
@@ -283,7 +278,7 @@ async def repair_password_get(request: Request):
     :return: Страница с формой для восстановления пароля.
     """
     info = {'request': request, 'title': 'Восстановление пароля'}
-    return templates.TemplateResponse("users/repair.html", info)
+    return templates.TemplateResponse("repair.html", info)
 
 
 @user_router.post('/repair')
@@ -303,12 +298,12 @@ async def repair_password_post(request: Request, db: Annotated[Session, Depends(
     user = db.scalar(select(User).where(repair.username == User.username and repair.email == User.email))
     if user is None:
         info['message'] = 'Пользователь не найден'
-        return templates.TemplateResponse("users/repair.html", info)
+        return templates.TemplateResponse("epair.html", info)
     return RedirectResponse(f'/user/create_password/{user.id}', status_code=status.HTTP_303_SEE_OTHER)
 
 
 @user_router.get('/create_password/{user_id}')
-async def create_password_get(request: Request, db: Annotated[Session, Depends(get_db)], user_id: int=-1):
+async def create_password_get(request: Request, db: Annotated[Session, Depends(get_db)], user_id: int = -1):
     """
     Отображение страницы ввода нового пароля.
     :param db: Подключение к базе данных
@@ -323,7 +318,7 @@ async def create_password_get(request: Request, db: Annotated[Session, Depends(g
         return RedirectResponse('/user', status_code=status.HTTP_303_SEE_OTHER)
     info['name'] = user.username
     info['user_id'] = user_id
-    return templates.TemplateResponse("users/create_new_password.html", info)
+    return templates.TemplateResponse("create_new_password.html", info)
 
 
 @user_router.post('/create_password/{user_id}')
@@ -349,10 +344,10 @@ async def create_password_post(request: Request, db: Annotated[Session, Depends(
         info['message'] = 'Пароли не соответствуют'
         info['name'] = user.username
         info['user_id'] = user_id
-        return templates.TemplateResponse("users/create_new_password.html", info)
+        return templates.TemplateResponse("create_new_password.html", info)
     password = get_password_hash(password)
     result = db.execute(
-        update(User).where(User.id==user_id).values(password=password,updated_at=datetime.now()))
+        update(User).where(User.id == user_id).values(password=password, updated_at=datetime.now()))
     db.commit()
     info['message'] = 'Пароль изменён'
     access_token = create_access_token({"sub": str(user.id)})
@@ -379,10 +374,10 @@ async def delete_user_admin_get(request: Request, db: Annotated[Session, Depends
     info = {'request': request, 'title': 'Удаление пользователя'}
     if user is None:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                             detail='Вы не авторизованны или у вас отсутствуют права')
+                             detail='Вы не авторизованны')
     elif not user.admin:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                             detail='Вы не авторизованны или у вас отсутствуют права')
+                             detail='У вас отсутствуют права')
 
     user = find_user_by_id(db, id_user)
     if user is None:
@@ -390,7 +385,7 @@ async def delete_user_admin_get(request: Request, db: Annotated[Session, Depends
     else:
         info['user'] = user
         info['is_staff'] = user.admin
-    return templates.TemplateResponse("users/user_page.html", info)
+    return templates.TemplateResponse("delete_user_page.html", info)
 
 
 @user_router.post('/list/delete/{id_user}')
@@ -407,21 +402,21 @@ async def delete_user_admin_post(request: Request, db: Annotated[Session, Depend
     info = {'request': request, 'title': 'Администратор. Удаление пользователя'}
     if user is None:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                             detail='Вы не авторизованны или у вас отсутствуют права')
+                             detail='Вы не авторизованны')
     elif not user.admin:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                             detail='Вы не авторизованны или у вас отсутствуют права')
+                             detail='У вас отсутствуют права')
 
-    user = find_user_by_id(db, id_user)
-    if user is None:
+    user_del = find_user_by_id(db, id_user)
+    if user_del is None:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Пользователь не найден')
     else:
-        buy_products = db.scalars(select(BuyerProd).where(BuyerProd.user == user.id)).all()
-        if buy_products is not None:
-            db.execute(delete(BuyerProd).where(BuyerProd.user == user.id))
-        db.execute(delete(User).where(User.id == user.id))
+        if id_user in cars.keys():
+            cars.pop(id_user)
+        delete_buyer(db, 'user', id_user)
+        db.execute(delete(User).where(User.id == id_user))
         db.commit()
-        return RedirectResponse('user/list', status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse('/user/list', status_code=status.HTTP_303_SEE_OTHER)
 
 
 @user_router.post('/list/update/{id_user}')
@@ -446,20 +441,19 @@ async def update_user_admin_post(request: Request, db: Annotated[Session, Depend
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                              detail='Вы не авторизованны или у вас отсутствуют права')
 
-    user = find_user_by_id(db, id_user)
-    if user is None:
+    user_upd = find_user_by_id(db, id_user)
+    if user_upd is None:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Пользователь не найден')
     else:
-        info['user'] = user
-        bis_active, bis_staff  = user_update.is_active == 'Да', user_update.is_staff == 'Да'
+        bis_active, bis_staff = user_update.is_active == 'Да', user_update.is_staff == 'Да'
         badmin = user_update.admin == 'Да'
-        db.execute(update(User).where(User.id == user.id).values(email=user_update.email,
+        db.execute(update(User).where(User.id == id_user).values(email=user_update.email,
                                                                  day_birth=user_update.day_birth,
                                                                  is_active=bis_active,
                                                                  is_staff=bis_staff, admin=badmin,
                                                                  updated_at=datetime.now()))
         db.commit()
-    return RedirectResponse('user/list', status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse('/user/list', status_code=status.HTTP_303_SEE_OTHER)
 
 
 @user_router.get('/list/update/{id_user}')
@@ -487,7 +481,7 @@ async def update_user_admin_get(request: Request, db: Annotated[Session, Depends
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Пользователь не найден')
     else:
         info['user'] = user
-    return templates.TemplateResponse("users/update_admin_user.html", info)
+    return templates.TemplateResponse("update_admin_user.html", info)
 
 
 @user_router.get('/list/{id_user}')
@@ -516,7 +510,7 @@ async def select_user_admin_get(request: Request, db: Annotated[Session, Depends
     else:
         info['user'] = user
         info['is_staff'] = user.admin
-    return templates.TemplateResponse("users/admin_user.html", info)
+    return templates.TemplateResponse("admin_user.html", info)
 
 
 @user_router.get('/list')
@@ -536,4 +530,4 @@ async def select_list_user_get(request: Request, db: Annotated[Session, Depends(
     elif user.admin:
         users = db.scalars(select(User)).all()
         info['users'] = users
-    return templates.TemplateResponse("users/users_list.html", info)
+    return templates.TemplateResponse("users_list.html", info)

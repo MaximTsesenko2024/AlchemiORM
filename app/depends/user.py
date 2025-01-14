@@ -1,28 +1,26 @@
-from fastapi import Request, HTTPException, status, Depends
+from typing import Annotated
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from fastapi import Depends, Request
+from app.backend.db.db_depends import get_db
 from jose import jwt, JWTError
 from datetime import datetime, timezone
-from .auth import SECRET_KEY, ALGORITHM
-from sqlalchemy.orm import Session
-from typing import Annotated
-from app.models.users import User
-from app.backend.db.db_depends import get_db
-from sqlalchemy import select
+from ..routers.auth import SECRET_KEY, ALGORITHM
+from ..models.users import User
 
 
 def find_user_by_id(db: Annotated[Session, Depends(get_db)], user_id: int = -1) -> User | None:
     """
     Поиск пользователя по идентификационному номеру.
-    :param db: Подключение к базе данных
+    :param db: Подключение к базе данных.
     :param user_id: Идентификационный номер пользователя.
     :return: Объект user если пользователь в базе данных найден, None - в противном случае
     """
-    if user_id < 0:
-        return None
     user = db.scalar(select(User).where(User.id == user_id))
     return user
 
 
-def get_token(request: Request):
+def get_token(request: Request) -> str | None:
     """
     Получение значения токена из запроса
     :param request: Запрос
@@ -34,7 +32,7 @@ def get_token(request: Request):
     return token
 
 
-async def get_current_user(db: Annotated[Session, Depends(get_db)], token: str | None = Depends(get_token)):
+def get_current_user(db: Annotated[Session, Depends(get_db)], token: str | None = Depends(get_token)) -> User | None:
     """
     Получение пользователя по токену.
     :param db: Подключение к базе данных
@@ -53,11 +51,9 @@ async def get_current_user(db: Annotated[Session, Depends(get_db)], token: str |
     expire_time = datetime.fromtimestamp(int(expire), tz=timezone.utc)
     if (not expire) or (expire_time < datetime.now(timezone.utc)):
         return None
-
     user_id = payload.get('sub')
     if not user_id:
         return None
-
     user = find_user_by_id(db=db, user_id=int(user_id))
     if not user:
         return None

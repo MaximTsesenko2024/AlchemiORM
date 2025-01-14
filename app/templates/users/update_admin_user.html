@@ -9,7 +9,7 @@
         <p> {{ message }} </p>
         <p></p>
         <section class="conteiner-fluid">
-            <form method="post" action="/user/update/{{user.id}}?">
+            <form method="post" action="/user/list/update/{{user.id}}?">
                 <div class="col-auto">
                     <div class="imput-group">
                     <p>Пользователь: {{user.username}}</p>
@@ -22,16 +22,20 @@
                     aria-describedby="btn-update">
                     <p></p>
                     <label for="is_active">Активный: </label>
-                    <input type="text" id="is_active" name="is_active" {% if user.is_active %} value="Да" {% else %} value="Нет" {% endif %}
+                    <input type="text" id="is_active" name="is_active"
+                           {% if user.is_active %} value="Да" {% else %} value="Нет" {% endif %}
                     aria-describedby="btn-update"> Да/Нет
                     <p></p>
                     <label for="is_staff">Сотрудник: </label>
-                    <input type="text" id="is_staff" name="is_staff" {% if user.is_staff %} value="Да" {% else %} value="Нет" {% endif %}
+                    <input type="text" id="is_staff" name="is_staff"
+                           {% if user.is_staff %} value="Да" {% else %} value="Нет" {% endif %}
                     aria-describedby="btn-update"> Да/Нет
                     <p></p>
                     <label for="admin">Администратор: </label>
-                    <input type="text" id="admin" name="admin" {% if user.admin %} value="Да" {% else %} value="Нет"  {% endif %}
+                    <input type="text" id="admin" name="admin"
+                           {% if user.admin %} value="Да" {% else %} value="Нет"  {% endif %}
                     aria-describedby="btn-update"> Да/Нет
+                        <p></p>
                     <button type="submit" id="btn-update">Изменить</button>
                      <p></p>
                     </div>

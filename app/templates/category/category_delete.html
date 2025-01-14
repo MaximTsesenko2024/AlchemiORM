@@ -11,7 +11,7 @@
         {% if display %}
             {% if delete %}
             <section class="conteiner-fluid">
-                <form method="post" action="/product/category/delete/{{id_category}}">
+                <form method="post" action="/category/delete/{{id_category}}">
                     <div class="col-auto">
                         <div class="imput-group">
                         <p></p>
@@ -26,7 +26,7 @@
                     <li>{{i.name}}</li>
                 {% endfor %}
             </ul>
-            <a href="/product/category/list">Перейти к списку категорий</a>
+            <a href="/category/list">Перейти к списку категорий</a>
            {% endif %}
        {% endif %}
 </body>

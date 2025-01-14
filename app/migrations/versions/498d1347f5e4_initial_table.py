@@ -1,8 +1,8 @@
 """initial table
 
-Revision ID: 71238fa1974d
+Revision ID: 498d1347f5e4
 Revises: 
-Create Date: 2024-12-09 18:45:51.455736
+Create Date: 2025-01-14 10:20:40.670914
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '71238fa1974d'
+revision: str = '498d1347f5e4'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -32,6 +32,7 @@ def upgrade() -> None:
     sa.Column('id', sa.INTEGER(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('location', sa.String(), nullable=True),
+    sa.Column('is_active', sa.BOOLEAN(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
@@ -49,6 +50,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
+    op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
     op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
     op.create_table('products',
     sa.Column('id', sa.INTEGER(), nullable=False),
@@ -58,22 +60,24 @@ def upgrade() -> None:
     sa.Column('price', sa.DOUBLE(), nullable=True),
     sa.Column('count', sa.INTEGER(), nullable=True),
     sa.Column('is_active', sa.BOOLEAN(), nullable=True),
-    sa.Column('category', sa.INTEGER(), nullable=False),
+    sa.Column('category_id', sa.INTEGER(), nullable=False),
     sa.Column('action', sa.BOOLEAN(), nullable=True),
     sa.Column('img', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['category'], ['categories.id'], ),
+    sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_products_name'), 'products', ['name'], unique=False)
     op.create_table('buyer',
     sa.Column('id', sa.INTEGER(), nullable=False),
-    sa.Column('user', sa.INTEGER(), nullable=False),
-    sa.Column('product', sa.INTEGER(), nullable=False),
+    sa.Column('user_id', sa.INTEGER(), nullable=False),
+    sa.Column('product_id', sa.INTEGER(), nullable=False),
     sa.Column('id_operation', sa.INTEGER(), nullable=False),
     sa.Column('id_shop', sa.INTEGER(), nullable=False),
-    sa.ForeignKeyConstraint(['id_shop'], ['shops.id'], ),
-    sa.ForeignKeyConstraint(['product'], ['products.id'], ),
-    sa.ForeignKeyConstraint(['user'], ['users.id'], ),
+    sa.Column('is_used', sa.BOOLEAN(), nullable=True),
+    sa.Column('count', sa.INTEGER(), nullable=True),
+    sa.ForeignKeyConstraint(['id_shop'], ['shops.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
@@ -85,6 +89,7 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_products_name'), table_name='products')
     op.drop_table('products')
     op.drop_index(op.f('ix_users_username'), table_name='users')
+    op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
     op.drop_table('shops')

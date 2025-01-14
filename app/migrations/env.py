@@ -19,7 +19,10 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from app.backend.db.db import Base
-from app.models.product import ProductModel, BuyerProd, Shops, Categories
+from app.models.product import ProductModel
+from app.models.buy import BuyerProd
+from app.models.shop import Shops
+from app.models.category import Categories
 from app.models.users import User
 target_metadata = Base.metadata
 

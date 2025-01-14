@@ -8,34 +8,31 @@
     <h1>{{title}}</h1>
         <p> {{ message }} </p>
         <p></p>
-    {% if tk %}
+    {% if user %}
         <h2> Имя пользователя: {{user.username}}</h2>
         <p> Адрес электронной почты: {{user.email}}</p>
         <p> Дата рождения: {{user.day_birth}}</p>
         <p></p>
-        {% if user.is_staff %}
             <p>Используется: {% if user.is_active %} Да {% else %} Нет {% endif %}</p>
             <p></p>
             <p>Сотрудник: {% if user.is_staff %} Да {% else %} Нет {% endif %}</p>
             <p></p>
-        {% endif %}
-        {% if user.admin %}
              <p>Дата создания: {{user.created_at}}</p>
             <p></p>
             <p>Дата последнего обновления: {{user.updated_at}}</p>
             <p></p>
-            <p><a href="\user\list"><button>Список пользователей</button></a></p>
-        {% endif %}
-        <a href="\user\update\{{user.id}}"><button>Изменить</button></a>
+            <a href="\user\list"><button>Список пользователей</button></a>
+        <a href="\user\list\update\{{user.id}}"><button>Изменить</button></a>
         <p></p>
-        <a href="\user\delete"><button>Удалить</button></a>
+        <a href="\user\list\delete\{{user.id}}"><button>Удалить</button></a>
         <p></p>
         <p><a href="\user\logout"><button>Выход</button></a></p>
     {% else %}
         <p> Вы не авторизованы. Пройдите авторизацию </p>
         <p><a href="\user\login"><button>Вход</button></a></p>
-        <p><a href="\user\registration"><button>Регистрация</button></a></p>
     {% endif %}
+
+
     <p><a href="\main"> На главную</a></p>
 
 
