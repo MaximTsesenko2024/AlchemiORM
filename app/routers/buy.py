@@ -329,12 +329,14 @@ async def orders_get(request: Request, db: Annotated[Session, Depends(get_db)], 
     if buy_prods is not None:
         orders = get_orders_by_list(list(buy_prods))
         info['orders'], info['service'] = pagination(orders, page, 4)
+    else:
+        info['empty'] = True
     return templates.TemplateResponse('order_list_page.html', info)
 
 
 @buy_router.get('/orders/number/{number}')
-async def orders_get(request: Request, db: Annotated[Session, Depends(get_db)], number: int = -1, used: str = '',
-                     prod: int = -1, user=Depends(get_current_user)):
+async def order_get(request: Request, db: Annotated[Session, Depends(get_db)], number: int = -1, used: str = '',
+                    prod: int = -1, user=Depends(get_current_user)):
     """
     Отображение заказа
     :param request: Запрос.
@@ -393,4 +395,6 @@ async def orders_get(request: Request, db: Annotated[Session, Depends(get_db)], 
         if buy_prods is not None:
             orders = get_orders_by_list(list(buy_prods))
             info['orders'], info['service'] = pagination(orders, page, 4)
+        else:
+            info['empty'] = True
     return templates.TemplateResponse('order_list_page.html', info)

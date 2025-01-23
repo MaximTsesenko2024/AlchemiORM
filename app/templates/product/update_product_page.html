@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./app/templates/product/style.css">
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{{title}}</title>
 </head>
@@ -42,6 +42,6 @@
             <p></p>
         </section>
         {% endif %}
-<a href="/product/list"> Вернуться</a>
+<a href="/product/{{product.id}}"><button>Вернуться</button></a>
 </body>
 </html>

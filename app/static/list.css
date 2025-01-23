@@ -53,3 +53,8 @@ html {
 .button:hover {
   background-color: #555;
 }
+
+img {
+ float: left;
+ padding: 0 8px;
+ }

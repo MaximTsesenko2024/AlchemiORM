@@ -38,9 +38,10 @@
                     </div>
                     <p></p>
                 {% endfor %}
-            {% else %}
+            {% endif %}
+            {% if empty %}
                 <p>Заказов нет</p>
             {% endif %}
-        <p><a href="/main"> На главную</a></p>
+        <p><a href="\main"><button>На главную</button></a></p>
 </body>
 </html>

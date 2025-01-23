@@ -34,7 +34,7 @@
             {% for i in products %}
                  <div class ="column">
                     <div class="card">
-                      <img style="padding: 0 8px;" src="data:image/{{i['format_file']}}; base64, {{ i['image_str'] | safe }}" alt="{{ i['name']}}">
+                      <img src="data:image/{{i['format_file']}}; base64, {{ i['image_str'] | safe }}" alt="{{ i['name']}}">
                       <div class="container">
                         <h2>{{ i['name']}}</h2>
                             {% if not i['is_active'] %}  Товар не доступен <br> <br>
@@ -56,6 +56,6 @@
         {% endif %}
         <p></p>
         <p></p>
-        <p><a href="/main"> На главную</a></p>
+        <p><a href="/main"> <button>На главную </button></a></p>
 </body>
 </html>

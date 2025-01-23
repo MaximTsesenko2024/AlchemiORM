@@ -7,7 +7,7 @@
 </head>
 <body>
         <h1> {{ product.name}}</h1>
-        <img style="float: left; padding: 0 8px;" src="data:image/{{format_file}}; base64, {{ image_str | safe }}" alt="{{ product.name}}"/>
+        <img src="data:image/{{format_file}}; base64, {{ image_str | safe }}" alt="{{ product.name}}"/>
         <h2>Описание</h2>
         <p> {{product.description}}</p>
         {% if product.is_active %}
@@ -23,14 +23,14 @@
                 <a href="/buy/car/{{product.id}}"> Купить</a>
             {% endif %}
             {% if user.is_staff %}
-                <p><a href="/product/update_product/{{product.id}}">Обновить</a></p>
+                <p><a href="/product/update_product/{{product.id}}">Изменить</a></p>
                 <p> <a href="/product/update_image_product/{{product.id}}">Изменить изображение</a></p>
                 <p> <a href="/product/delete/{{product.id}}">Удалить</a></p>
             {% endif %}
             {% else %}
             <p>Вы не вошли в систему</p>
             {% endif %}
-
-        <p><a href="/main"> На главную</a></p>
+        <a href="/product/list"><button>Вернуться</button></a>
+        <p><a href="/main"> <button>На главную </button></a></p>
 </body>
 </html>
