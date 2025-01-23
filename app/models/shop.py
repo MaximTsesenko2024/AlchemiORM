@@ -13,4 +13,10 @@ class Shops(Base):
     name = Column(String, unique=True)
     location = Column(String)
     is_active = Column(BOOLEAN, default=True)
+    used_buy = relationship(
+        'BuyerProd',
+        back_populates='shop',
+        cascade='save-update, merge, delete, delete-orphan',
+        passive_deletes=True,
+    )
     

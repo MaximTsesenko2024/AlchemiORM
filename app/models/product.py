@@ -28,11 +28,11 @@ class ProductModel(Base):
     action = Column(BOOLEAN, default=False)
     # картинка товара
     img = Column(String)
-    category = relationship('Categories')
+    category = relationship('Categories', back_populates='product')
     used_buy = relationship(
         'BuyerProd',
         back_populates='product',
-        cascade='save-update, merge, delete',
+        cascade='save-update, merge, delete, delete-orphan',
         passive_deletes=True,
     )
 

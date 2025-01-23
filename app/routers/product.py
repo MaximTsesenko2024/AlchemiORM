@@ -60,14 +60,10 @@ async def select_products_list_get(request: Request, db: Annotated[Session, Depe
             image_str, format_file = image_to_str(product, 'list')
             product_list.append({'name': product.name, 'price': product.price, 'id': product.id, 'image_str': image_str,
                                  'format_file': format_file, 'count': product.count, 'is_active': product.is_active})
-        info['products'], service = pagination(product_list, page, 4)
+        info['products'], info['service'] = pagination(product_list, page, 6)
         categories = get_categories(db)
         if categories is not None:
             info['categories'] = categories
-        print(service)
-        pages = [x for x in range(service['total'] + 1)]
-        info['service'] = {'page': service['page'], 'size': service['size'], 'pages': pages}
-        print(info['service'])
     return templates.TemplateResponse('product_list_page.html', info)
 
 

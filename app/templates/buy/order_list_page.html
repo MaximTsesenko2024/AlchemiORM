@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/list.css') }}" rel="stylesheet">
+    <title> {{title}} </title>
+</head>
+<body>
+        <h1> {{title}}  </h1>
+        <h2>{{message}}</h2>
+        <form>
+            <input type="search" id="mySearch" name="number" placeholder="Поиск заказа" size="30" />
+            <button>Поиск</button>
+            </form>
+            {% if orders %}
+                {% if service %}
+                    <p> Страницы:
+                        {% for i in service['pages'] %}
+                            <a href="?page={{i}}">{{i+1}}</a>
+                        {% endfor %}
+                        </p>
+                {% endif %}
+                {% for order in orders %}
+                    <div class ='row'>
+                        <div class="card">
+                            <div class="container">
+                                <a href="/buy/orders/number/{{order.number}}"> Заказ номер: {{order.number}} </a>
+                                    <ul>
+                                        {% for item in order.data_prods %}
+                                            <li> Товар: {{item['product'].name}}
+                                                 Количество: {{item['count']}}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <p></p>
+                {% endfor %}
+            {% else %}
+                <p>Заказов нет</p>
+            {% endif %}
+        <p><a href="/main"> На главную</a></p>
+</body>
+</html>

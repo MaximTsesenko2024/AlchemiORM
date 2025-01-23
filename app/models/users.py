@@ -27,7 +27,7 @@ class User(Base):
     purchase = relationship(
         'BuyerProd',
         back_populates='user',
-        cascade='save-update, merge, delete',
+        cascade='save-update, merge, delete, delete-orphan',
         passive_deletes=True,
     )
 

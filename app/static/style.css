@@ -32,7 +32,3 @@
 .dropdown:hover .dropdown-content {display: block;}
 
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
-img {
-    float: left;
-    margin: 10px;
-}

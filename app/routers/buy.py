@@ -4,21 +4,115 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import insert, select, update, delete, desc, func
 from sqlalchemy.orm import Session
 from typing import Annotated
+
+from app.backend.service.service import pagination
 from app.depends import find_category, get_product, update_count_product, get_shop, get_shop_list, get_current_user
 from app.models.buy import BuyerProd
 from app.backend.db.db_depends import get_db
 from fastapi.templating import Jinja2Templates
 from app.models.users import User
+from app.models.shop import Shops
 from app.shemas import Car, Payment
 
 
-class CarView:
-    def __init__(self, number, id_prod, name, price, count):
+class BuyProd:
+    """
+    Класс товар в корзине
+    """
+
+    def __init__(self, number: int, id_prod: int, name: str, price: float, count: int):
+        """
+        Инициализация элемента класса.
+        :param number: Номер товара в корзине пользователя.
+        :param id_prod: Идентификатор товара.
+        :param name: Название товара.
+        :param price: Цена товара.
+        :param count: Количество товара.
+        """
         self.number = number
         self.id_prod = id_prod
         self.name = name
         self.price = price
         self.count = count
+
+
+class Order:
+    """
+    Класс отображения заказа
+    """
+
+    def __init__(self, number: int, shop: Shops | None = None, user_id: int | None = None):
+        """
+        Инициализация элемента класс.
+        :param number: Номер заказа.
+        :param shop: Объект магазин.
+        :param user_id: Идентификатор пользователя
+        """
+        self.shop = shop
+        self.number = number
+        self.user_id = user_id
+        self.data_prods = []
+
+    def __str__(self):
+        return f'Заказ номер: {self.number}'
+
+    def add_prods_by_db(self, database: Annotated[Session, Depends(get_db)]):
+        """
+        Добавление данных по товарам
+        :param database: База данных
+        """
+        order = database.scalars(select(BuyerProd).where(BuyerProd.id_operation == self.number)).all()
+        if self.shop is None:
+            self.shop = order[0].shop
+        if self.user_id is None:
+            self.user_id = order[0].user_id
+        for prod in order:
+            self.data_prods.append({'product': prod.product, 'count': prod.count, 'used': prod.is_used})
+
+    def add_prods_by_list(self, buy_prod_list: list):
+        """
+        Добавление данных по товарам
+        :param buy_prod_list: Список заказанных товаров
+        """
+        if self.shop is None:
+            self.shop = buy_prod_list[0].shop
+        if self.user_id is None:
+            self.user_id = buy_prod_list[0].user_id
+        for prod in buy_prod_list:
+            if prod.id_operation == self.number:
+                self.data_prods.append({'product': prod.product, 'count': prod.count, 'used': prod.is_used})
+
+    def get_index_prod(self, prod_id: int):
+        """
+        Получение индекса товара по идентификатору товара
+        :param prod_id: Идентификатор товаров
+        :return: Индекс или None
+        """
+        for index in range(len(self.data_prods)):
+            if self.data_prods[index]['prod_id'] == prod_id:
+                return index
+        return None
+
+    def set_used_prod(self, prod_id, used):
+        index = self.get_index_prod(prod_id)
+        self.data_prods[index]['is_used'] = used
+
+
+def get_orders_by_list(buy_prods_list: list):
+    """
+    Получение списка заказов по списку покупок
+    :param buy_prods_list: Список покупок
+    :return: Список заказов
+    """
+    orders = []
+    orders_number = []
+    for buy_prods in buy_prods_list:
+        if buy_prods.id_operation not in orders_number:
+            order = Order(buy_prods.id_operation, buy_prods.shop, buy_prods.user_id)
+            order.add_prods_by_list(buy_prods_list)
+            orders.append(order)
+            orders_number.append(buy_prods.id_operation)
+    return orders
 
 
 buy_router = APIRouter(prefix='/buy', tags=['buy'])
@@ -170,7 +264,13 @@ async def car_post(request: Request, db: Annotated[Session, Depends(get_db)], id
             update_count_product(db, id_product, -car_user.count)
         if user.id not in cars.keys():
             cars[user.id] = []
-        cars[user.id].append(CarView(len(cars[user.id]), product.id, product.name, product.price, car_user.count))
+        res = True
+        for i in range(len(cars[user.id])):
+            if cars[user.id][i].id_prod == id_product:
+                cars[user.id][i].count += car_user.count
+                res = False
+        if res:
+            cars[user.id].append(BuyProd(len(cars[user.id]), product.id, product.name, product.price, car_user.count))
     return templates.TemplateResponse('car.html', info)
 
 
@@ -196,3 +296,101 @@ async def car_get(request: Request, db: Annotated[Session, Depends(get_db)], id_
     info['count'] = 1
     info['buy'] = 1
     return templates.TemplateResponse('car.html', info)
+
+
+@buy_router.get('/orders/{user_id}')
+async def orders_get(request: Request, db: Annotated[Session, Depends(get_db)], user_id: int = -1, number: str = '',
+                     page: str = '', user=Depends(get_current_user)):
+    """
+    Отображение страницы история заказов.
+    :param number: Строка поиска
+    :param page: Номер страницы списка заказов
+    :param db: Подключение к базе данных
+    :param request: Запрос.
+    :param user_id: Идентификатор пользователя.
+    :param user: Текущий пользователь.
+    :return: Страница история заказов
+    """
+    info = {'request': request, 'title': 'История заказов'}
+    if page == '':
+        page = 0
+    else:
+        page = int(page)
+    if user is None:
+        return RedirectResponse(f'/main', status_code=status.HTTP_303_SEE_OTHER)
+    if not any((user.is_staff, user.admin)) and user.id != user_id:
+        return RedirectResponse(f'/main', status_code=status.HTTP_303_SEE_OTHER)
+    if number != '':
+        buy_prods = db.scalars(select(BuyerProd).where((BuyerProd.user_id == user_id) &
+                                                       (BuyerProd.id_operation == number))).all()
+    else:
+        buy_prods = db.scalars(select(BuyerProd).where(BuyerProd.user_id == user_id).
+                               order_by(BuyerProd.id_operation.desc())).all()
+    if buy_prods is not None:
+        orders = get_orders_by_list(list(buy_prods))
+        info['orders'], info['service'] = pagination(orders, page, 4)
+    return templates.TemplateResponse('order_list_page.html', info)
+
+
+@buy_router.get('/orders/number/{number}')
+async def orders_get(request: Request, db: Annotated[Session, Depends(get_db)], number: int = -1, used: str = '',
+                     prod: int = -1, user=Depends(get_current_user)):
+    """
+    Отображение заказа
+    :param request: Запрос.
+    :param db: Подключение к базе данных.
+    :param number: Номер заказа.
+    :param used: Признак операции с товаром
+    :param prod: Идентификатор товара
+    :param user: Текущий пользователь.
+    :return: Страница заказа
+    """
+    info = {'request': request, 'title': 'Описание заказа'}
+    if prod > -1:
+        res = used == '1'
+        db.execute(update(BuyerProd).where((BuyerProd.id_operation == number) &
+                                           (BuyerProd.product_id == prod)).values(is_used=res))
+        db.commit()
+    buy_prods = db.scalars(select(BuyerProd).where(BuyerProd.id_operation == number)).all()
+    if buy_prods is None:
+        info['message'] = 'Заказ не найден'
+    if user is None:
+        return RedirectResponse(f'/main', status_code=status.HTTP_303_SEE_OTHER)
+    if not any((user.is_staff, user.admin)) and user.id != buy_prods[0].user_id:
+        return RedirectResponse(f'/main', status_code=status.HTTP_303_SEE_OTHER)
+    orders = get_orders_by_list(list(buy_prods))
+    order = orders[0]
+    info['order'] = order
+    info['is_staff'] = user.is_staff
+    info['admin'] = user.admin
+    return templates.TemplateResponse('order_page.html', info)
+
+
+@buy_router.get('/orders')
+async def orders_get(request: Request, db: Annotated[Session, Depends(get_db)], number: str = '',
+                     page: str = '', user=Depends(get_current_user)):
+    """
+    Отображение страницы поиска заказа.
+    :param number: Строка поиска
+    :param page: Номер страницы списка заказов
+    :param db: Подключение к базе данных
+    :param request: Запрос.
+    :param user: Текущий пользователь.
+    :return: Страница история заказов
+    """
+    info = {'request': request, 'title': 'Поиск заказа'}
+    if page == '':
+        page = 0
+    else:
+        page = int(page)
+    if user is None:
+        return RedirectResponse(f'/main', status_code=status.HTTP_303_SEE_OTHER)
+    if not any((user.is_staff, user.admin)):
+        return RedirectResponse(f'/main', status_code=status.HTTP_303_SEE_OTHER)
+    if number != '':
+        number = int(number)
+        buy_prods = db.scalars(select(BuyerProd).where(BuyerProd.id_operation == number)).all()
+        if buy_prods is not None:
+            orders = get_orders_by_list(list(buy_prods))
+            info['orders'], info['service'] = pagination(orders, page, 4)
+    return templates.TemplateResponse('order_list_page.html', info)

@@ -413,7 +413,7 @@ async def delete_user_admin_post(request: Request, db: Annotated[Session, Depend
     else:
         if id_user in cars.keys():
             cars.pop(id_user)
-        delete_buyer(db, 'user', id_user)
+        #delete_buyer(db, 'user', id_user)
         db.execute(delete(User).where(User.id == id_user))
         db.commit()
         return RedirectResponse('/user/list', status_code=status.HTTP_303_SEE_OTHER)

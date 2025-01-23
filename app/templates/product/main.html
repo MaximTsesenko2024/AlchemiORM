@@ -21,7 +21,8 @@
                             <a href="/product/list">Список товаров</a>
                             <a href="/shop/list">Список магазинов</a>
                             {% if user_id %} <a href="/buy/car-user">Корзина</a>{% endif %}
-                            {% if is_staff %} <a href="/category/list">Список категорий</a>{% endif %}
+                            {% if is_staff %} <a href="/category/list">Список категорий</a> {% endif %}
+                            {% if admin or is_staff %} <a href="/buy/orders">Поиск заказа</a> {% endif %}
                     </div>
                 </div>
                 {% if categories %}

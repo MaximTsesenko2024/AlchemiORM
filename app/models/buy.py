@@ -16,6 +16,6 @@ class BuyerProd(Base):
     id_shop = Column(INTEGER, ForeignKey('shops.id', ondelete='CASCADE'), nullable=False)
     is_used = Column(BOOLEAN, default=False)
     count = Column(INTEGER)
-    user = relationship('User')
-    product = relationship('ProductModel')
+    user = relationship('User', back_populates='purchase',)
+    product = relationship('ProductModel', back_populates='used_buy')
     shop = relationship('Shops')

@@ -11,5 +11,11 @@ class Categories(Base):
     __table_args__ = {'keep_existing': True}
     id = Column(INTEGER, primary_key=True)
     name = Column(String, unique=True)
-    parent = Column(INTEGER, ForeignKey('categories.id'), default=-1)
+    parent = Column(INTEGER, ForeignKey('categories.id', ondelete='CASCADE'), default=-1)
     parent_category = relationship('Categories')
+    product = relationship(
+        'ProductModel',
+        back_populates='category',
+        cascade='save-update, merge, delete, delete-orphan',
+        passive_deletes=True,
+    )
