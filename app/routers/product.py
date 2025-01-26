@@ -148,9 +148,10 @@ async def create_product_get(request: Request, db: Annotated[Session, Depends(ge
 async def update_product_post(request: Request, db: Annotated[Session, Depends(get_db)], id_product: int = -1,
                               user=Depends(get_current_user),
                               item_number: str = Form(...), description: str = Form(...), price: str = Form(...),
-                              count: int = Form(...), category: str = Form(...)):
+                              count: int = Form(...), category: str = Form(...), is_active: str = Form(...)):
     """
     Изменение данных о товаре. Запись данных о товаре, введённых пользователем при наличии у него прав.
+    :param is_active: Статус доступности товара
     :param db: Подключение к базе данных
     :param request: Запрос.
     :param id_product: Идентификатор товара.
@@ -165,7 +166,7 @@ async def update_product_post(request: Request, db: Annotated[Session, Depends(g
     if user is not None and user.is_staff:
         db.execute(update(ProductModel).where(ProductModel.id == id_product).values(description=description,
                                                                                     price=price, count=count,
-                                                                                    is_active=count > 0,
+                                                                                    is_active=is_active == 'Да',
                                                                                     category_id=int(category),
                                                                                     item_number=item_number))
         db.commit()

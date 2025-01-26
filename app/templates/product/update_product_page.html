@@ -27,6 +27,10 @@
                      <label for="count"> Введите количество товара </label>
                     <input type="text" value={{product.count}} id="count" name="count" maxlength="255">
                     <p></p>
+                    <label for="is_active">Доступность товара: </label>
+                    <input type="text" id="is_active" name="is_active" {% if product.is_active %} value="Да" {% else %} value="Нет"  {% endif %}
+                    aria-describedby="btn-update"> Да/Нет
+                    <p></p>
                     <label for="category">Категория товара:</label>
                     <select name="category" id="category">
                         {% for item in categories %}
